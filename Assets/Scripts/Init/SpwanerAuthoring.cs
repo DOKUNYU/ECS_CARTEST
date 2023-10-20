@@ -8,7 +8,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using Havok;
 
-namespace init
+namespace Init
 {
     public class SpwanerAuthoring : MonoBehaviour
     {
