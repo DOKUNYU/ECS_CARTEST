@@ -74,7 +74,6 @@ namespace Infrastructure.Input
             {
                 Looking = m_CharacterLooking,
                 Movement = m_CharacterMovement,
-                Jumped = 0
             });
         }
     }
@@ -109,14 +108,10 @@ namespace Infrastructure.Input
 
             public void Execute(ref CharacterControllerInternal cc)
             {
-                cc.Input.Movement = Input.Movement;
-                cc.Input.Looking = Input.Looking*0.5f;
+                cc.Input.Movement = Input.Movement*0.5f;
+                cc.Input.Movement.x = -cc.Input.Movement.x;
+                cc.Input.Looking = Input.Looking*0.07f;
                 cc.Input.Looking.y=-cc.Input.Looking.y;
-                // jump request may not be processed on this frame, so record it rather than matching input state
-                if (Input.Jumped != 0)
-                {
-                    cc.Input.Jumped = 1;
-                }
             }
         }
     
