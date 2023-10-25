@@ -180,7 +180,9 @@ namespace CharacterController
                     {
                         var pitch = internalLookUp[car].Pitch;
                         var pitchTransform = PitchTransformLookUp.GetRefRW(pitch);
-                        pitchTransform.ValueRW.Rotation = internalLookUp[car].PitchTransform.Rotation;
+                        var newRotation = internalLookUp[car].PitchTransform.Rotation;
+                        newRotation = Quaternion.Lerp(pitchTransform.ValueRO.Rotation, newRotation, 0.9f);
+                        pitchTransform.ValueRW.Rotation = newRotation;
                         continue;
                     }
                 }
@@ -347,7 +349,7 @@ namespace CharacterController
                     {
                         currRotation.value.x = 0;
                         currRotation.value.w = 0.999f;
-                        ccInternalData.CurrentPitchRotationAngle = 50.21f;
+                        ccInternalData.CurrentPitchRotationAngle = 50.3f;
                     }
                     pitchLocalTransform.Rotation = currRotation;
 
@@ -395,8 +397,6 @@ namespace CharacterController
 
                     float horizontal = ccInternal.Input.Movement.x;
                     float vertical = -ccInternal.Input.Movement.y;
-                    //bool jumpRequested = ccInternal.Input.Jumped != 0;
-                    ccInternal.Input.Jumped = 0; // "consume" the event
                     bool haveInput = (math.abs(horizontal) > float.Epsilon) || (math.abs(vertical) > float.Epsilon);
                     if (haveInput)
                     {
@@ -407,7 +407,6 @@ namespace CharacterController
                         requestedMovementDirection = math.normalize(worldSpaceMovement);
                     }
 
-                    //shouldJump = jumpRequested && ccInternal.SupportedState == Util.CharacterSupportState.Supported;
                 }
 
                 // Turning
