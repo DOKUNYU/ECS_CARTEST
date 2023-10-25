@@ -5,6 +5,7 @@ using Unity.Physics;
 using Unity.Physics.GraphicsIntegration;
 using Unity.Transforms;
 using static CharacterController.Util;
+using UnityEngine;
 
 namespace CharacterController
 {
@@ -47,7 +48,6 @@ namespace CharacterController
     {
         public float2 Movement;
         public float2 Looking;
-        public int Jumped;
     }
     
     /// <summary>
@@ -72,11 +72,19 @@ namespace CharacterController
     }
 
     /// <summary>
-    /// 存放摄像机
+    /// 存放摄像机实体
     /// </summary>
-    public struct CameraObject : IComponentData
+    public struct CameraProxy : IComponentData
     {
-        public Entity Camera;
     }
+    
+    /// <summary>
+    /// 存放摄像机运动？
+    /// </summary>
+    public class MainCamera : IComponentData
+    {
+        public Transform Transform;
+    }
+
     
 }
