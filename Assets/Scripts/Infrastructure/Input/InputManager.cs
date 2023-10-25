@@ -111,6 +111,7 @@ namespace Infrastructure.Input
             {
                 cc.Input.Movement = Input.Movement;
                 cc.Input.Looking = Input.Looking*0.5f;
+                cc.Input.Looking.y=-cc.Input.Looking.y;
                 // jump request may not be processed on this frame, so record it rather than matching input state
                 if (Input.Jumped != 0)
                 {

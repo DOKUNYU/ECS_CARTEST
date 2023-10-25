@@ -10,6 +10,7 @@ using Unity.Physics.GraphicsIntegration;
 using Unity.Physics.Stateful;
 using Unity.Physics.Systems;
 using Unity.Transforms;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace CharacterController
@@ -26,6 +27,7 @@ namespace CharacterController
         
         //查询characterController
         EntityQuery characterControllerQuery;
+        EntityQuery ptzControllerQuery;
         
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -34,16 +36,71 @@ namespace CharacterController
                 .WithAllRW<CharacterController, CharacterControllerInternal>()
                 .WithAllRW<LocalTransform>()
                 .WithAll<PhysicsCollider>().Build();
+            ptzControllerQuery= SystemAPI.QueryBuilder()
+                .WithAllRW<PtzController>()
+                .WithAllRW<LocalTransform>().Build();
             state.RequireForUpdate(characterControllerQuery);
+            state.RequireForUpdate(ptzControllerQuery);
             state.RequireForUpdate<PhysicsWorldSingleton>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            //获取生成之后的车的实体
+            EntityQuery carQuery = state.GetEntityQuery(typeof(Car));
+            NativeArray<Entity> carEntity = carQuery.ToEntityArray(Allocator.Persistent);
+            
+            //获取和修改pitch
+                foreach (var car in carEntity)
+                {
+                    if (SystemAPI.GetComponent<CharacterControllerInternal>(car).Pitch != Entity.Null)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        //获取实体上的child
+                        var child = SystemAPI.GetBuffer<Child>(car);
+                        //从child获取pitch
+                        for (int i = 0; i < child.Length; i++)
+                        {
+                            //检查该子组件是不是有ptz
+                            if (SystemAPI.HasComponent<PtzYaw>(child[i].Value))
+                            {
+                                var yawChild = SystemAPI.GetBuffer<Child>(child[i].Value);
+                                for (int j = 0; j < yawChild.Length; j++)
+                                {
+                                    if (SystemAPI.HasComponent<PtzPitch>(yawChild[j].Value))
+                                    {
+                                        var carInternal = SystemAPI.GetComponentRW<CharacterControllerInternal>(car);
+                                        carInternal.ValueRW.Pitch= yawChild[j].Value;
+                                        carInternal.ValueRW.PitchTransform= SystemAPI.GetComponentRW<LocalTransform>(yawChild[j].Value).ValueRW;
+                                        //carInternal.ValueRW.PitchTransformRW = SystemAPI.GetComponentRW<LocalTransform>(yawChild[j].Value);
+                                        carInternal.ValueRW.PtzController= SystemAPI.GetComponentRW<PtzController>(yawChild[j].Value).ValueRW;
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            var pitchJob = new PitchChangeJob()
+            {
+                PitchTransformLookUp = SystemAPI.GetComponentLookup<LocalTransform>(),
+                internalLookUp = SystemAPI.GetComponentLookup<CharacterControllerInternal>(),
+                CarEntities = carEntity
+            };
+            state.Dependency = pitchJob.Schedule(state.Dependency);
+            
+            
+            
             //获取controller的chunk
             var chunks = characterControllerQuery.ToArchetypeChunkArray(Allocator.TempJob);
             //？
+            
             var deferredImpulses = new NativeStream(chunks.Length, Allocator.TempJob);
             //获取物理世界实体
             var physicsWorldSingleton = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
@@ -64,7 +121,14 @@ namespace CharacterController
                 PhysicsWorldSingleton = physicsWorldSingleton,
                 DeferredImpulseWriter = deferredImpulses.AsWriter()
             };
+            
+            
             state.Dependency = ccJob.ScheduleParallel(characterControllerQuery, state.Dependency);
+            /*var pcJob = new PtzControllerJob
+            {
+                LocalTransformHandle = SystemAPI.GetComponentTypeHandle<LocalTransform>(),
+                PtzControllerHandle = SystemAPI.GetComponentTypeHandle<PtzController>(true)
+            };*/
             
             //平滑运动？
             var smoothedCharacterControllerQuery = SystemAPI.QueryBuilder()
@@ -97,7 +161,33 @@ namespace CharacterController
                 smoothing.CurrentVelocity = ccInternal.Velocity;
             }
         }
-        
+
+       
+
+        [BurstCompile]
+        struct PitchChangeJob : IJob
+        {
+            public ComponentLookup<LocalTransform> PitchTransformLookUp;
+            public ComponentLookup<CharacterControllerInternal> internalLookUp;
+            public NativeArray<Entity> CarEntities;
+
+            public void Execute()
+            {
+                //获取和修改pitch
+                foreach (var car in CarEntities)
+                {
+                    if (internalLookUp[car].Pitch != Entity.Null)
+                    {
+                        var pitch = internalLookUp[car].Pitch;
+                        var pitchTransform = PitchTransformLookUp.GetRefRW(pitch);
+                        pitchTransform.ValueRW.Rotation = internalLookUp[car].PitchTransform.Rotation;
+                        continue;
+                    }
+                }
+            }
+
+        }
+
         [BurstCompile]
         struct CharacterControllerJob : IJobChunk
         {
@@ -115,6 +205,7 @@ namespace CharacterController
             
             //记录冲量。避免两个character作用于同一个body
             [NativeDisableParallelForRestriction] public NativeStream.Writer DeferredImpulseWriter;
+            
 
 
             public unsafe void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask,
@@ -151,6 +242,11 @@ namespace CharacterController
                     var ccInternalData = chunkCCInternalData[i];
                     var collider = chunkPhysicsColliderData[i];
                     var localTransform = chunkLocalTransformData[i];
+                    
+                    //获取pitch
+                    var pitch = ccInternalData.Pitch;
+                    var pitchLocalTransform = ccInternalData.PitchTransform;
+                    var ptzController = ccInternalData.PtzController;
                     
                     
                     //dynamic buffer
@@ -209,7 +305,7 @@ namespace CharacterController
                     
                     // 处理输入
                     float3 desiredVelocity = ccInternalData.Velocity.Linear;
-                    HandleUserInput(ccComponentData, stepInput.Up, surfaceVelocity, ref ccInternalData,
+                    HandleUserInput(ccComponentData, ptzController,stepInput.Up, surfaceVelocity, ref ccInternalData,
                         ref desiredVelocity);
                     
                     
@@ -239,17 +335,38 @@ namespace CharacterController
                     // Write back and orientation integration
                     localTransform.Position = transform.pos;
                     localTransform.Rotation = quaternion.AxisAngle(up, ccInternalData.CurrentRotationAngle);//轴  角
+                    var currRotation = quaternion.AxisAngle(math.left(), ccInternalData.CurrentPitchRotationAngle);
+                    if (currRotation.value.x > 0.45f)
+                    {
+                        currRotation.value.x = 0.45f;
+                        currRotation.value.w = 0.888f;
+                        ccInternalData.CurrentPitchRotationAngle = 49.31f;
+                    }
+
+                    if (currRotation.value.x < 0)
+                    {
+                        currRotation.value.x = 0;
+                        currRotation.value.w = 0.999f;
+                        ccInternalData.CurrentPitchRotationAngle = 50.21f;
+                    }
+                    pitchLocalTransform.Rotation = currRotation;
+
+                    //通过这个写回internaldata
+                    ccInternalData.PitchTransform = pitchLocalTransform;
                     
                     // Write back to chunk data
                     {
                         chunkCCInternalData[i] = ccInternalData;
                         chunkLocalTransformData[i] = localTransform;
+
                     }
                 }
 
                 DeferredImpulseWriter.EndForEachIndex();
             }
+
             
+
             /// <summary>
             /// 处理用户输入
             /// </summary>
@@ -258,7 +375,7 @@ namespace CharacterController
             /// <param name="surfaceVelocity"></param>
             /// <param name="ccInternal"></param>
             /// <param name="linearVelocity"></param>
-            private void HandleUserInput(CharacterController cc, float3 up,
+            private void HandleUserInput(CharacterController cc,PtzController ptz, float3 up,
                 float3 surfaceVelocity,
                 ref CharacterControllerInternal ccInternal, ref float3 linearVelocity)
             {
@@ -296,17 +413,27 @@ namespace CharacterController
                 // Turning
                 {
                     float horizontal = ccInternal.Input.Looking.x;
-                    bool haveInput = (math.abs(horizontal) > float.Epsilon);
-                    if (haveInput)
+                    float vertical =ccInternal.Input.Looking.y;
+                    bool haveInputX = (math.abs(horizontal) > float.Epsilon);
+                    bool haveInputY = (math.abs(vertical) > float.Epsilon);
+                    if (haveInputX)
                     {
-                        var userRotationSpeed = horizontal * cc.RotationSpeed;
-                        ccInternal.Velocity.Angular = -userRotationSpeed * up;
-                        ccInternal.CurrentRotationAngle += userRotationSpeed * DeltaTime;
+                        var userRotationSpeedX = horizontal * cc.RotationSpeed;
+                        ccInternal.Velocity.Angular = -userRotationSpeedX * up;
+                        ccInternal.CurrentRotationAngle += userRotationSpeedX * DeltaTime;
                     }
                     else
                     {
                         ccInternal.Velocity.Angular = 0f;
                     }
+                    
+                    if (haveInputY)
+                    {
+                        var userRotationSpeedY = vertical * ptz.RotationSpeed;
+                        ccInternal.Velocity.Angular = -userRotationSpeedY * math.left();
+                        ccInternal.CurrentPitchRotationAngle += userRotationSpeedY * DeltaTime;
+                    }
+
                 }
 
                 // Apply input velocities
@@ -435,6 +562,8 @@ namespace CharacterController
                                  (isJumping ? math.dot(desiredVelocity, up) * up : float3.zero);
             }
         }
+        
+        
         
         [BurstCompile]
         struct ApplyDefferedPhysicsUpdatesJob : IJob

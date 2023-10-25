@@ -5,7 +5,6 @@ using Unity.Physics;
 using Unity.Physics.GraphicsIntegration;
 using Unity.Physics.Stateful;
 using UnityEngine;
-using static CharacterController.Util;
 using static Unity.Physics.PhysicsStep;
 
 namespace CharacterController
@@ -78,6 +77,7 @@ namespace CharacterController
                         Entity = GetEntity(TransformUsageFlags.Dynamic),
                         Input = new Input(),
                     };
+                    
 
                     //获取控制示例
                     var entity = GetEntity(TransformUsageFlags.Dynamic);
@@ -97,6 +97,8 @@ namespace CharacterController
                         AddBuffer<StatefulTriggerEvent>(entity);
                         AddComponent(entity, new StatefulTriggerEventExclude());
                     }  */
+                    
+                    
 
                 }
 
@@ -104,60 +106,6 @@ namespace CharacterController
         }
     }
     
-    //存放控制参数
-    public struct CharacterController : IComponentData
-    {
-        //输入设置
-        public float MovementSpeed;
-        public float MaxMovementSpeed;
-        public float RotationSpeed;
-        public float JumpUpwardsSpeed;
-        public float MaxSlope; // radians
-
-        //物理设置
-        public float3 Gravity;
-        public int MaxIterations;
-        public float CharacterMass;
-        public float SkinWidth;
-        public float ContactTolerance;
-        public byte AffectsPhysicsBodies;
-        
-        //事件设置
-        public byte RaiseCollisionEvents;
-        public byte RaiseTriggerEvents;
-    }
     
-    /// <summary>
-    /// 存放输入参数
-    /// </summary>
-    public struct Input : IComponentData
-    {
-        public float2 Movement;
-        public float2 Looking;
-        public int Jumped;
-    }
-    
-    /// <summary>
-    /// 详细的控制参数，给其他sys引用用
-    /// </summary>
-    //[WriteGroup(typeof(PhysicsGraphicalInterpolationBuffer))]
-    [WriteGroup(typeof(PhysicsGraphicalSmoothing))]
-    public struct CharacterControllerInternal : IComponentData
-    {
-        public float CurrentRotationAngle;
-        public CharacterSupportState SupportedState;
-        public float3 UnsupportedVelocity;
-        public PhysicsVelocity Velocity;
-        public Entity Entity;
-        public bool IsJumping;
-        public Input Input;
-    }
-    
-    /// <summary>
-    /// 车标记组件
-    /// </summary>
-    public struct Car : IComponentData
-    {
-    }
     
 }
