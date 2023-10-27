@@ -19,6 +19,8 @@ namespace CharacterController
     {
         //查询characterController
         EntityQuery characterControllerQuery;
+        //获取生成之后的车的实体
+        private EntityQuery carQuery;
         
         
         [BurstCompile]
@@ -28,7 +30,7 @@ namespace CharacterController
             characterControllerQuery = SystemAPI.QueryBuilder()
                 .WithAllRW< CharacterControllerInternal>()
                 .WithAll<PhysicsCollider>().Build();
-            
+            carQuery = SystemAPI.QueryBuilder().WithAllRW< Car>().Build();
             //存在ShootSetting才运行
             state.RequireForUpdate<ShootSetting>();
             //query结束后采运行
@@ -38,9 +40,6 @@ namespace CharacterController
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            
-            //获取生成之后的车的实体
-            EntityQuery carQuery = state.GetEntityQuery(typeof(Car));
             NativeArray<Entity> carEntity = carQuery.ToEntityArray(Allocator.Persistent);
             
             //绑定shoot
@@ -78,7 +77,6 @@ namespace CharacterController
                         var child = ChildLookUp[pitch];
                         foreach (var target in child)
                         {
-                            //到底是谁返回空值啊
                             if (ShootSettingLookUp.HasComponent(target.Value))
                             {
                                 var carInternal = InternalLookUp.GetRefRW(car);
