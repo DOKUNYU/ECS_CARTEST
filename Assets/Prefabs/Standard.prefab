@@ -44,7 +44,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0abb26b00b77dd4fb00b318c7a1b26e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera: {fileID: 753250430313535346}
+--- !u!1 &2219687793471229415
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4283040909325166813}
+  - component: {fileID: 1270586457160003837}
+  m_Layer: 0
+  m_Name: shoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4283040909325166813
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2219687793471229415}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0.0053, z: -0.2023}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1387184292837524925}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &1270586457160003837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2219687793471229415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dc14d0f010d9cc48adb6172b2d73b0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabs: {fileID: 3077292867315656718, guid: ae9295661dccf8a438c9e5b4284df2f5, type: 3}
+  Trans: {fileID: 4283040909325166813}
 --- !u!1001 &1843227530669502378
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -243,6 +288,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8443069046029309417, guid: 623a2e9697cf78d4dbfd559acfa111d2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7729161289689841131}
+    - targetCorrespondingSourceObject: {fileID: -8443069046029309417, guid: 623a2e9697cf78d4dbfd559acfa111d2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4283040909325166813}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 623a2e9697cf78d4dbfd559acfa111d2, type: 3}
       insertIndex: -1

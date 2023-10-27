@@ -76,6 +76,7 @@ namespace CharacterController
                     {
                         Entity = GetEntity(TransformUsageFlags.Dynamic),
                         Input = new Input(),
+                        ShootInit = false
                     };
                     
 

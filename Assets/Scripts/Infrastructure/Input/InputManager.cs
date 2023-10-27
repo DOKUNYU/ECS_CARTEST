@@ -6,6 +6,7 @@ using Unity.Burst;
 using Unity.Entities;
 using CharacterController;
 using Unity.Jobs;
+using UnityEngine.InputSystem.HID;
 
 namespace Infrastructure.Input
 {
@@ -28,6 +29,7 @@ namespace Infrastructure.Input
             //移动和转向
             Vector2 m_CharacterMovement;
             Vector2 m_CharacterLooking;
+            private float m_CharacterFire;
         
 #pragma warning restore 649
             
@@ -59,6 +61,7 @@ namespace Infrastructure.Input
         void CarControls.IMainActions.OnMovement(InputAction.CallbackContext context) => m_CharacterMovement = context.ReadValue<Vector2>();
         void CarControls.IMainActions.OnCamera(InputAction.CallbackContext context) => m_CharacterLooking = context.ReadValue<Vector2>();
         
+        void CarControls.IMainActions.OnFire(InputAction.CallbackContext context)=> m_CharacterFire= context.ReadValue<float>();
                 
 #endif
 
@@ -74,6 +77,7 @@ namespace Infrastructure.Input
             {
                 Looking = m_CharacterLooking,
                 Movement = m_CharacterMovement,
+                Fire = m_CharacterFire
             });
         }
     }
@@ -112,6 +116,7 @@ namespace Infrastructure.Input
                 cc.Input.Movement.x = -cc.Input.Movement.x;
                 cc.Input.Looking = Input.Looking*0.07f;
                 cc.Input.Looking.y=-cc.Input.Looking.y;
+                cc.Input.Fire = Input.Fire;
             }
         }
     
