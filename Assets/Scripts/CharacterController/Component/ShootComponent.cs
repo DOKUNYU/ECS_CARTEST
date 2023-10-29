@@ -17,4 +17,13 @@ namespace CharacterController
         //发射机构
         public Entity SpwanPrefab;
     }
+
+    public struct Bullet : IComponentData
+    {
+        public Entity Shooter;
+        public Entity Reciever;
+        public bool IsInit;
+        public LocalTransform pos;
+        public float3 dir;
+    }
 }

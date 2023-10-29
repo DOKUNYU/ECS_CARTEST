@@ -70,7 +70,7 @@ Transform:
   m_GameObject: {fileID: 2219687793471229415}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0.0053, z: -0.2023}
+  m_LocalPosition: {x: 0, y: 0.0053, z: -0.2197}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -89,7 +89,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabs: {fileID: 3077292867315656718, guid: ae9295661dccf8a438c9e5b4284df2f5, type: 3}
-  Trans: {fileID: 4283040909325166813}
 --- !u!1001 &1843227530669502378
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -350,7 +349,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MotionType: 0
   m_Smoothing: 1
-  m_Mass: 1
+  m_Mass: 15
   m_LinearDamping: 0.01
   m_AngularDamping: 0.05
   m_InitialLinearVelocity:
@@ -402,11 +401,11 @@ MonoBehaviour:
   m_ShapeType: 0
   m_PrimitiveCenter:
     x: 0.0053273737
-    y: 0.1378844
+    y: 0.04
     z: 0.0058155954
   m_PrimitiveSize:
     x: 0.5427331
-    y: 0.47052464
+    y: 0.26101935
     z: 0.6191918
   m_PrimitiveOrientation:
     Value:
@@ -419,9 +418,9 @@ MonoBehaviour:
     Radius: 0.27136654
     Axis: 2
   m_Cylinder:
-    Height: 0.6191918
-    Radius: 0.27136654
-    Axis: 2
+    Height: 0.26101935
+    Radius: 0.3095959
+    Axis: 1
   m_CylinderSideCount: 20
   m_SphereRadius: 0.3095959
   m_MinimumSkinnedVertexWeight: 0.1
