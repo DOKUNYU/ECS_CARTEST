@@ -44,6 +44,15 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""ec7b0ab4-1138-405f-a9a7-113094350f87"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -112,6 +121,17 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""81a858e2-8458-4633-beac-a61d583e7cc9"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -122,6 +142,7 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
         m_main = asset.FindActionMap("main", throwIfNotFound: true);
         m_main_Movement = m_main.FindAction("Movement", throwIfNotFound: true);
         m_main_Camera = m_main.FindAction("Camera", throwIfNotFound: true);
+        m_main_Fire = m_main.FindAction("Fire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -185,12 +206,14 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
     private List<IMainActions> m_MainActionsCallbackInterfaces = new List<IMainActions>();
     private readonly InputAction m_main_Movement;
     private readonly InputAction m_main_Camera;
+    private readonly InputAction m_main_Fire;
     public struct MainActions
     {
         private @CarControls m_Wrapper;
         public MainActions(@CarControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_main_Movement;
         public InputAction @Camera => m_Wrapper.m_main_Camera;
+        public InputAction @Fire => m_Wrapper.m_main_Fire;
         public InputActionMap Get() { return m_Wrapper.m_main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -206,6 +229,9 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
             @Camera.started += instance.OnCamera;
             @Camera.performed += instance.OnCamera;
             @Camera.canceled += instance.OnCamera;
+            @Fire.started += instance.OnFire;
+            @Fire.performed += instance.OnFire;
+            @Fire.canceled += instance.OnFire;
         }
 
         private void UnregisterCallbacks(IMainActions instance)
@@ -216,6 +242,9 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
             @Camera.started -= instance.OnCamera;
             @Camera.performed -= instance.OnCamera;
             @Camera.canceled -= instance.OnCamera;
+            @Fire.started -= instance.OnFire;
+            @Fire.performed -= instance.OnFire;
+            @Fire.canceled -= instance.OnFire;
         }
 
         public void RemoveCallbacks(IMainActions instance)
@@ -237,5 +266,6 @@ public partial class @CarControls: IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnCamera(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
     }
 }

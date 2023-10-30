@@ -48,6 +48,7 @@ namespace CharacterController
     {
         public float2 Movement;
         public float2 Looking;
+        public float Fire;
     }
     
     /// <summary>
@@ -57,6 +58,7 @@ namespace CharacterController
     [WriteGroup(typeof(PhysicsGraphicalSmoothing))]
     public struct CharacterControllerInternal : IComponentData
     {
+        //move
         public float CurrentRotationAngle;
         public CharacterSupportState SupportedState;
         public float3 UnsupportedVelocity;
@@ -64,11 +66,14 @@ namespace CharacterController
         public Entity Entity;
         public bool IsJumping;
         public Input Input;
-        
+        //pitch
         public Entity Pitch;
         public PtzController PtzController;
         public LocalTransform PitchTransform;
         public float CurrentPitchRotationAngle;
+        //shoot
+        public Entity Shoot;
+        public bool ShootInit;
     }
 
     /// <summary>
