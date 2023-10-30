@@ -44,7 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0abb26b00b77dd4fb00b318c7a1b26e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera: {fileID: 753250430313535346}
 --- !u!1001 &1843227530669502378
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -253,6 +252,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 623a2e9697cf78d4dbfd559acfa111d2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5260354668183725344}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 623a2e9697cf78d4dbfd559acfa111d2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4314009550626005308}
     - targetCorrespondingSourceObject: {fileID: -6274962213687346197, guid: 623a2e9697cf78d4dbfd559acfa111d2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1403237786149493217}
@@ -510,6 +512,19 @@ MonoBehaviour:
   AffectsPhysicsBodies: 1
   RaiseCollisionEvents: 0
   RaiseTriggerEvents: 0
+--- !u!114 &4314009550626005308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537166174130508539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9139508e777574abc48fe190428a03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHp: 100
 --- !u!1 &3566480029081408577 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -6274962213687346197, guid: 623a2e9697cf78d4dbfd559acfa111d2, type: 3}
