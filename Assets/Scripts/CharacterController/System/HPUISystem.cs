@@ -67,8 +67,6 @@ public partial struct HPUISystem : ISystem
             var hpBar = state.EntityManager.GetComponentObject<Image>(mapping.UIEntity);
 
             hpBar.fillAmount = health.hp / health.maxHp;
-            
-            //state.EntityManager.SetComponentData(mapping.UIEntity, displayCollisionTextComponent);
 
         }
         
