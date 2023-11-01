@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8879383602726509737}
   - component: {fileID: 8146277026508023705}
   - component: {fileID: 4655127743165491539}
+  - component: {fileID: 6849215338413516285}
   m_Layer: 2
   m_Name: 17mm
   m_TagString: Untagged
@@ -393,3 +394,16 @@ MonoBehaviour:
         Tag07: 0
     m_SerializedVersion: 1
   m_SerializedVersion: 1
+--- !u!114 &6849215338413516285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3077292867315656718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be0b30aac8e8a04bb5fe952e9ba050d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Damage: 10

@@ -21,7 +21,7 @@ namespace CharacterController
     public partial struct BloodSystem : ISystem
     {
 
-        //查询characterController
+        //查询bloodController
         EntityQuery bloodControllerQuery;
 
         [BurstCompile]
@@ -61,6 +61,10 @@ namespace CharacterController
                 for (int i = 0; i < chunk.Count; i++)
                 {
                     var blood = bloods[i];
+                    if(blood.hp<=0)
+                    {
+                        // todo:死亡
+                    }
                     blood.hp = math.clamp(blood.hp, 0, blood.maxHp);
                     bloods[i] = blood;
                 }
