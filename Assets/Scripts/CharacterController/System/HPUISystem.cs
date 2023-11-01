@@ -29,20 +29,22 @@ public partial struct HPUISystem : ISystem
 
     [BurstCompile]
     public void OnCreate(ref SystemState state)
-    {
-        var sendEntitiesQuery = SystemAPI.QueryBuilder().WithAll<TargetEntity>().Build();
-        var UIEntitiesQuery = SystemAPI.QueryBuilder().WithAll<DisplayUITag>().Build();
+    { 
+        sendEntitiesQuery = SystemAPI.QueryBuilder().WithAllRW<TargetEntity>().Build();
+        UIDisplayQuery = SystemAPI.QueryBuilder().WithAllRW<DisplayUITag>().Build();
 
         //var sentEntities = sentEntitiesQuery.ToEntityArray(Allocator.Temp);
 
         state.RequireForUpdate(sendEntitiesQuery);
+        state.RequireForUpdate(UIDisplayQuery);
         state.RequireForUpdate<BloodComponent>();
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        var sendEntities = sendEntitiesQuery.ToEntityArray(Allocator.Temp);
-        var UIEntities = UIDisplayQuery.ToEntityArray(Allocator.Temp);
+        NativeArray<Entity> sendEntities = sendEntitiesQuery.ToEntityArray(Allocator.Persistent);
+        NativeArray<Entity> UIEntities = UIDisplayQuery.ToEntityArray(Allocator.Persistent);
 
         NativeArray<displayUI> eventArray =
             new NativeArray<displayUI>(UIEntities.Length, Allocator.Temp);
