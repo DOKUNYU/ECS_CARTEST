@@ -69,7 +69,7 @@ public partial struct HPUISystem : ISystem
             hpBar.fillAmount = health.hp / health.maxHp;
 
         }
-        
+       
     }
 
 
