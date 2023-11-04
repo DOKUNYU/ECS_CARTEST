@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace CharacterController
+namespace UI
 {
     /// <summary>
     /// 

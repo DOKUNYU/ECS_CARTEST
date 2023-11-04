@@ -8,7 +8,9 @@ using Unity.Collections;
 using Unity.Entities;
 using UnityEngine.UI;
 
-[RequireMatchingQueriesForUpdate]
+namespace UI
+{
+    [RequireMatchingQueriesForUpdate]
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 [UpdateAfter(typeof(HitCollisionSystem))]
 public partial struct HPUISystem : ISystem
@@ -127,4 +129,6 @@ public partial struct HPUISystem : ISystem
     }
 
 }
+}
+
 
