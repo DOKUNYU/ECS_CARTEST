@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Init
 {
-    public struct SpwanSetting : IComponentData
+    public struct SpawnSetting : IComponentData
     {
         public Entity Prefab { get; set; }
         public float3 Position { get; set; }

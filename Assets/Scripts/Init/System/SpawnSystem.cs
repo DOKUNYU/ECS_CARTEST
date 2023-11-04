@@ -11,13 +11,13 @@ using CharacterController;
 
 namespace Init
 {
-    public partial struct SpwanSystem : ISystem
+    public partial struct SpawnSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             //存在SpwanSetting才运行
-            state.RequireForUpdate<SpwanSetting>();
+            state.RequireForUpdate<SpawnSetting>();
         }
         
         [BurstCompile]
@@ -27,7 +27,7 @@ namespace Init
             state.Enabled = false;
             
             //获取spwaner setting
-            var setting = SystemAPI.GetSingleton<SpwanSetting>();
+            var setting = SystemAPI.GetSingleton<SpawnSetting>();
             Debug.Log("tran.pos: "+setting.Position);
             
             //var query=SystemAPI.QueryBuilder().WithAll<SpwanSetting>().Build();
