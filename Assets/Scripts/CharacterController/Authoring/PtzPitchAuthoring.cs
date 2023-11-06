@@ -24,7 +24,6 @@ namespace CharacterController
                 {
                     var ptzData = new PtzController
                     {
-                        Entity =  GetEntity(TransformUsageFlags.Dynamic),
                         RotationSpeed = authoring.RotationSpeed
                     };
                     

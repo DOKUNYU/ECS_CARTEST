@@ -37,7 +37,6 @@ namespace CharacterController
     /// </summary>
     public struct PtzController : IComponentData
     {
-        public Entity Entity;//存放pitch实体
         public float RotationSpeed;//速度
     }
     
