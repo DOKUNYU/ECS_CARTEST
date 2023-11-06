@@ -148,17 +148,21 @@ namespace CharacterController
                     else
                     {
                         var pitch = InternalLookUp[car].Pitch;
-                        //获取pitch的child
-                        var child = ChildLookUp[pitch];
-                        foreach (var target in child)
+                        if (pitch != Entity.Null)
                         {
-                            if (ShootSettingLookUp.HasComponent(target.Value))
+                            //获取pitch的child
+                            var child = ChildLookUp[pitch];
+                            foreach (var target in child)
                             {
-                                var carInternal = InternalLookUp.GetRefRW(car);
-                                carInternal.ValueRW.Shoot = target.Value;
-                                carInternal.ValueRW.ShootInit = true;
+                                if (ShootSettingLookUp.HasComponent(target.Value))
+                                {
+                                    var carInternal = InternalLookUp.GetRefRW(car);
+                                    carInternal.ValueRW.Shoot = target.Value;
+                                    carInternal.ValueRW.ShootInit = true;
+                                }
                             }
                         }
+                        
                     }
                 }
             }

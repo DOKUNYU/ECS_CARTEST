@@ -12,12 +12,14 @@ using Unity.Physics.Systems;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Init;
 
 namespace CharacterController
 {
     [RequireMatchingQueriesForUpdate]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(PhysicsSystemGroup))]
+    [UpdateAfter(typeof(SpawnSystem))]
     public partial struct CharacterControllerSystem : ISystem
     {
         //不知道干什么的 既然用到了就用一下吧
@@ -52,13 +54,16 @@ namespace CharacterController
             NativeArray<Entity> carEntity = carQuery.ToEntityArray(Allocator.Persistent);
             
             //获取和修改pitch
-                foreach (var car in carEntity)
+            foreach (var car in carEntity)
+            {
+                if (SystemAPI.GetComponent<CharacterControllerInternal>(car).Pitch != Entity.Null)
                 {
-                    if (SystemAPI.GetComponent<CharacterControllerInternal>(car).Pitch != Entity.Null)
-                    {
-                        continue;
-                    }
-                    else
+                    continue;
+                }
+                else
+                {
+                    //判斷是否有child
+                    if (SystemAPI.HasBuffer<Child>(car))
                     {
                         //获取实体上的child
                         var child = SystemAPI.GetBuffer<Child>(car);
@@ -86,6 +91,7 @@ namespace CharacterController
                         }
                     }
                 }
+            }
 
             var pitchJob = new PitchChangeJob()
             {
