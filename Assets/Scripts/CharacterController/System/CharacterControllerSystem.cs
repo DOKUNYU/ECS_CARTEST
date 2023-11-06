@@ -29,7 +29,6 @@ namespace CharacterController
         
         //查询characterController
         EntityQuery characterControllerQuery;
-        EntityQuery ptzControllerQuery;
         
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -38,11 +37,7 @@ namespace CharacterController
                 .WithAllRW<CharacterController, CharacterControllerInternal>()
                 .WithAllRW<LocalTransform>()
                 .WithAll<PhysicsCollider>().Build();
-            ptzControllerQuery= SystemAPI.QueryBuilder()
-                .WithAllRW<PtzController>()
-                .WithAllRW<LocalTransform>().Build();
             state.RequireForUpdate(characterControllerQuery);
-            state.RequireForUpdate(ptzControllerQuery);
             state.RequireForUpdate<PhysicsWorldSingleton>();
         }
 
