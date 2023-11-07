@@ -79,6 +79,7 @@ namespace CharacterController
                     {
                         Shooter = car,
                         IsInit = false,
+                        IsCollision = false
                     });
                     ecb.Playback(state.EntityManager);
                     Debug.Log("完成prefabs生成");
@@ -106,19 +107,17 @@ namespace CharacterController
                     shootJobHandle.Complete();
                     bulletComponentData.ValueRW.IsInit = true;
                 }
-
-                if (bulletComponentData.ValueRO.Reciever == Entity.Null)
+                
+                var applyForceJob = new ApplyForceJob()
                 {
-                    var applyForceJob = new ApplyForceJob()
-                    {
-                        LocalTransformLookUp = SystemAPI.GetComponentLookup<LocalTransform>(),
-                        BulletEntity = bullet,
-                        VelocityLookUp=SystemAPI.GetComponentLookup<PhysicsVelocity>(),
-                        MassLookUp = SystemAPI.GetComponentLookup<PhysicsMass>()
-                    };
-                    JobHandle shootJobHandle= applyForceJob.Schedule(state.Dependency);
-                    shootJobHandle.Complete();
-                }
+                    LocalTransformLookUp = SystemAPI.GetComponentLookup<LocalTransform>(),
+                    BulletEntity = bullet,
+                    VelocityLookUp=SystemAPI.GetComponentLookup<PhysicsVelocity>(),
+                    MassLookUp = SystemAPI.GetComponentLookup<PhysicsMass>()
+                };
+                JobHandle applyForceJobHandle= applyForceJob.Schedule(state.Dependency);
+                applyForceJobHandle.Complete();
+                
             }
             
             

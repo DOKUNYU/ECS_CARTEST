@@ -27,12 +27,7 @@ namespace CharacterController
         }
     }
 
-    public struct Harm : IComponentData
-    {
-        public float injury;
-        
-        //todo:碰撞后反弹（要加么
-    }
+    
     
     
     

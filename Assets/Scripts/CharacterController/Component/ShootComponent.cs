@@ -18,10 +18,19 @@ namespace CharacterController
 
     public struct Bullet : IComponentData
     {
+        //发射者
         public Entity Shooter;
-        public Entity Reciever;
+        //初始化和撞击状态
         public bool IsInit;
+        public bool IsCollision;
+        //子弹位置方向
         public LocalTransform pos;
         public float3 dir;
+    }
+
+    public struct Harm : IComponentData
+    {
+        //伤害组件
+        public float injury;
     }
 }
