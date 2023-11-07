@@ -14,8 +14,6 @@ namespace CharacterController
     {
         //子弹预制体
         public Entity BulletPrefab;
-        //发射机构
-        public Entity SpwanPrefab;
     }
 
     public struct Bullet : IComponentData

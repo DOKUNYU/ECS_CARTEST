@@ -18,8 +18,7 @@ namespace CharacterController
                 //bullet spwanSetting
                 AddComponent(entity,new ShootSetting
                 {
-                    BulletPrefab = bullet,
-                    SpwanPrefab = entity
+                    BulletPrefab = bullet
                 });
                 
             }
