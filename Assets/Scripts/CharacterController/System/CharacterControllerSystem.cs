@@ -19,7 +19,6 @@ namespace CharacterController
     [RequireMatchingQueriesForUpdate]
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(PhysicsSystemGroup))]
-    [UpdateAfter(typeof(SpawnSystem))]
     public partial struct CharacterControllerSystem : ISystem
     {
         //不知道干什么的 既然用到了就用一下吧
@@ -29,6 +28,7 @@ namespace CharacterController
         
         //查询characterController
         EntityQuery characterControllerQuery;
+        private EntityQuery carQuery;
         
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -37,6 +37,7 @@ namespace CharacterController
                 .WithAllRW<CharacterController, CharacterControllerInternal>()
                 .WithAllRW<LocalTransform>()
                 .WithAll<PhysicsCollider>().Build();
+            carQuery=SystemAPI.QueryBuilder().WithAllRW< Car>().Build();
             state.RequireForUpdate(characterControllerQuery);
             state.RequireForUpdate<PhysicsWorldSingleton>();
         }
@@ -45,7 +46,6 @@ namespace CharacterController
         public void OnUpdate(ref SystemState state)
         {
             //获取生成之后的车的实体
-            EntityQuery carQuery = state.GetEntityQuery(typeof(Car));
             NativeArray<Entity> carEntity = carQuery.ToEntityArray(Allocator.Persistent);
             
             //获取和修改pitch

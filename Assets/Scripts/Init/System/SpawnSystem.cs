@@ -13,9 +13,11 @@ namespace Init
 {
     public partial struct SpawnSystem : ISystem
     {
+        private EntityQuery carQuery;
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            carQuery=SystemAPI.QueryBuilder().WithAllRW< Car>().Build();
             //存在SpwanSetting才运行
             state.RequireForUpdate<SpawnSetting>();
         }
@@ -28,7 +30,7 @@ namespace Init
             
             //获取spwaner setting
             var setting = SystemAPI.GetSingleton<SpawnSetting>();
-            Debug.Log("tran.pos: "+setting.Position);
+            //Debug.Log("tran.pos: "+setting.Position);
             
             //var query=SystemAPI.QueryBuilder().WithAll<SpwanSetting>().Build();
             //创造ecb 在ecb中生成entity
@@ -39,7 +41,6 @@ namespace Init
             Debug.Log("创建完成");
             
             //获取生成之后的车的实体
-            EntityQuery carQuery = state.GetEntityQuery(typeof(Car));
             NativeArray<Entity> carEntity = carQuery.ToEntityArray(Allocator.Temp);
             
             //改变生成位置
