@@ -155,9 +155,10 @@ namespace CharacterController
                             {
                                 if (ShootSettingLookUp.HasComponent(target.Value))
                                 {
-                                    var carInternal = InternalLookUp.GetRefRW(car);
-                                    carInternal.ValueRW.Shoot = target.Value;
-                                    carInternal.ValueRW.ShootInit = true;
+                                    var carInternal = InternalLookUp[car];
+                                    carInternal.Shoot = target.Value;
+                                    carInternal.ShootInit = true;
+                                    InternalLookUp[car] = carInternal;
                                 }
                             }
                         }
@@ -182,9 +183,10 @@ namespace CharacterController
             public void Execute()
             {
                 //位置设定
-                var bulletTransform = LocalTransformLookUp.GetRefRW(BulletEntity);
-                bulletTransform.ValueRW.Position = LocalToWorldLookUp[InternalLookUp[Car].Shoot].Position;
-                bulletTransform.ValueRW.Rotation = LocalToWorldLookUp[InternalLookUp[Car].Shoot].Rotation;
+                var bulletTransform = LocalTransformLookUp[BulletEntity];
+                bulletTransform.Position = LocalToWorldLookUp[InternalLookUp[Car].Shoot].Position;
+                bulletTransform.Rotation = LocalToWorldLookUp[InternalLookUp[Car].Shoot].Rotation;
+                LocalTransformLookUp[BulletEntity] = bulletTransform;
             }
 
         }
@@ -203,14 +205,14 @@ namespace CharacterController
             public void Execute()
             {
                 //位置指定
-                var bulletTransform = LocalTransformLookUp.GetRefRW(BulletEntity);
+                var bulletTransform = LocalTransformLookUp[BulletEntity];
                 //施力
                 var pv = VelocityLookUp.GetRefRW(BulletEntity);
                 var pm = MassLookUp[BulletEntity];
 
-                var impulse = bulletTransform.ValueRW.Forward() * 1f;
-                pv.ValueRW.ApplyImpulse(pm, bulletTransform.ValueRO.Position, bulletTransform.ValueRO.Rotation, impulse,
-                    bulletTransform.ValueRW.Position);
+                var impulse = bulletTransform.Forward() * 1f;
+                pv.ValueRW.ApplyImpulse(pm, bulletTransform.Position, bulletTransform.Rotation, impulse,
+                    bulletTransform.Position);
 
             }
         }

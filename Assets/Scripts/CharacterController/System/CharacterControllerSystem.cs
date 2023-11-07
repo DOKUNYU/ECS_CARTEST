@@ -180,10 +180,11 @@ namespace CharacterController
                     if (internalLookUp[car].Pitch != Entity.Null)
                     {
                         var pitch = internalLookUp[car].Pitch;
-                        var pitchTransform = PitchTransformLookUp.GetRefRW(pitch);
+                        var pitchTransform = PitchTransformLookUp[pitch];
                         var newRotation = internalLookUp[car].PitchTransform.Rotation;
-                        newRotation = Quaternion.Lerp(pitchTransform.ValueRO.Rotation, newRotation, 0.9f);
-                        pitchTransform.ValueRW.Rotation = newRotation;
+                        newRotation = Quaternion.Lerp(pitchTransform.Rotation, newRotation, 0.9f);
+                        pitchTransform.Rotation = newRotation;
+                        PitchTransformLookUp[pitch] = pitchTransform;
                         continue;
                     }
                 }
