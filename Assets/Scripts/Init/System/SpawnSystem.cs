@@ -11,6 +11,7 @@ using CharacterController;
 
 namespace Init
 {
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial struct SpawnSystem : ISystem
     {
         private EntityQuery carQuery;
