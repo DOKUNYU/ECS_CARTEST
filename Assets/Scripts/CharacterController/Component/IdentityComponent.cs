@@ -22,4 +22,18 @@ namespace CharacterController
     public struct PtzPitch : IComponentData
     {
     }
+    
+    /// <summary>
+    /// 红基地组件(单例)
+    /// </summary> 
+    public struct BaseRed : IComponentData
+    {
+    }
+    
+    /// <summary>
+    /// 蓝基地组件(单例)
+    /// </summary> 
+    public struct BaseBlue : IComponentData
+    {
+    }
 }
