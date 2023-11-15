@@ -1,10 +1,13 @@
 // in order to circumvent API breakages that do not affect physics, some packages are removed from the project on CI
 // any code referencing APIs in com.unity.inputsystem must be guarded behind UNITY_INPUT_SYSTEM_EXISTS
+
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Burst;
 using Unity.Entities;
 using CharacterController;
+using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine.InputSystem.HID;
 
@@ -72,13 +75,21 @@ namespace Infrastructure.Input
             {
                 EntityManager.CreateEntity(typeof(CharacterController.Input));
             }
-            //设置单例
-            m_CharacterControllerInputQuery.SetSingleton(new CharacterController.Input
+            // //设置单例
+            // m_CharacterControllerInputQuery.SetSingleton(new CharacterController.Input
+            // {
+            //     Looking = m_CharacterLooking,
+            //     Movement = m_CharacterMovement,
+            //     Fire = m_CharacterFire
+            // });
+            var e = m_CharacterControllerInputQuery.GetSingletonEntity();
+            var c = new CharacterController.Input
             {
                 Looking = m_CharacterLooking,
                 Movement = m_CharacterMovement,
                 Fire = m_CharacterFire
-            });
+            };
+            SetComponent(e, c);
         }
     }
         // This input system simply applies the same character input
