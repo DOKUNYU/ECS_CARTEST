@@ -4,6 +4,7 @@ using Unity.Entities;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using UnityEngine;
+using Identity;
 
 
 namespace CharacterController

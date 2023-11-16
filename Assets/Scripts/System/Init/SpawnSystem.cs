@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
-using Unity.Physics.Systems;
 using Unity.Transforms;
 using Unity.Burst;
 using UnityEngine;
-using CharacterController;
+using Identity;
 
 namespace Init
 {

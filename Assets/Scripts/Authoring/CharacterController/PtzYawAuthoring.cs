@@ -2,6 +2,7 @@ using Unity.Entities;
 using UnityEngine;
 using System;
 using Unity.Mathematics;
+using Identity;
 
 namespace CharacterController
 {

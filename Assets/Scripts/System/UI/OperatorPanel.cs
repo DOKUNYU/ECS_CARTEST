@@ -8,56 +8,56 @@ using Unity.Collections;
 using Unity.Entities;
 using UnityEngine.UI;
 using UnityEngine;
-using UI;
+using Identity;
 
 namespace UI
 {
     public class OperatorPanel : MonoBehaviour
 {
     //query
-    private EntityQuery BaseBloodRedQuery;
-    private EntityQuery BaseBloodBlueQuery;
+    private EntityQuery _baseBloodRedQuery;
+    private EntityQuery _baseBloodBlueQuery;
     //血条
     public Image BaseBloodRed;
     public Image BaseBloodBlue;
     void Start()
     {
         //query
-        BaseBloodRedQuery = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(
+        _baseBloodRedQuery = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(
             new EntityQueryBuilder(Allocator.Temp)
                 .WithAll<BaseRed>());
-        BaseBloodBlueQuery = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(
+        _baseBloodBlueQuery = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(
             new EntityQueryBuilder(Allocator.Temp)
                 .WithAll<BaseBlue>());
     }
     void OnDestroy()
     {
         if (World.DefaultGameObjectInjectionWorld?.IsCreated == true &&
-            World.DefaultGameObjectInjectionWorld.EntityManager.IsQueryValid(BaseBloodRedQuery))
-            BaseBloodRedQuery.Dispose();
+            World.DefaultGameObjectInjectionWorld.EntityManager.IsQueryValid(_baseBloodRedQuery))
+            _baseBloodRedQuery.Dispose();
         if (World.DefaultGameObjectInjectionWorld?.IsCreated == true &&
-            World.DefaultGameObjectInjectionWorld.EntityManager.IsQueryValid(BaseBloodBlueQuery))
-            BaseBloodBlueQuery.Dispose();
+            World.DefaultGameObjectInjectionWorld.EntityManager.IsQueryValid(_baseBloodBlueQuery))
+            _baseBloodBlueQuery.Dispose();
     }
 
     void Update()
     {
         //等待世界初始化完成，查询完成且不为空
         if (World.DefaultGameObjectInjectionWorld?.IsCreated == true &&
-            World.DefaultGameObjectInjectionWorld.EntityManager.IsQueryValid(BaseBloodRedQuery) &&
-            !BaseBloodRedQuery.IsEmpty && 
-            World.DefaultGameObjectInjectionWorld.EntityManager.IsQueryValid(BaseBloodBlueQuery)&&
-            !BaseBloodBlueQuery.IsEmpty)
+            World.DefaultGameObjectInjectionWorld.EntityManager.IsQueryValid(_baseBloodRedQuery) &&
+            !_baseBloodRedQuery.IsEmpty && 
+            World.DefaultGameObjectInjectionWorld.EntityManager.IsQueryValid(_baseBloodBlueQuery)&&
+            !_baseBloodBlueQuery.IsEmpty)
         {
             //获得默认世界基地实体
-            var BaseRedEntity = BaseBloodRedQuery.GetSingletonEntity();
-            var BaseBlueEntity = BaseBloodBlueQuery.GetSingletonEntity();
+            var baseRedEntity = _baseBloodRedQuery.GetSingletonEntity();
+            var baseBlueEntity = _baseBloodBlueQuery.GetSingletonEntity();
 
-            World.DefaultGameObjectInjectionWorld.EntityManager.AddComponentData(BaseRedEntity, new BaseBloodUI()
+            World.DefaultGameObjectInjectionWorld.EntityManager.AddComponentData(baseRedEntity, new BaseBloodUI()
             {
                 BaseBlood = BaseBloodRed
             });
-            World.DefaultGameObjectInjectionWorld.EntityManager.AddComponentData(BaseBlueEntity, new BaseBloodUI()
+            World.DefaultGameObjectInjectionWorld.EntityManager.AddComponentData(baseBlueEntity, new BaseBloodUI()
             {
                 BaseBlood = BaseBloodBlue
             });
